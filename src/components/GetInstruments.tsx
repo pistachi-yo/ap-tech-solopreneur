@@ -14,7 +14,12 @@ export default function GetInstruments() {
   // Temp async function to prevent typescript errors
   useEffect(() => {
     async function getInstruments() {
-      const { data } = await supabase.from('instruments').select()
+      const { data, error } = await supabase.from('instruments').select()
+
+      if (error) {
+        console.error(error)
+        return
+      }
 
       setInstruments(data)
     }
