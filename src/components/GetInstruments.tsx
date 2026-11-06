@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 // @ts-expect-error javascript file has no type declaration
 import { supabase } from '../lib/supabaseClient.js'
 
+// Temporary instrument type interface until real data is used
 interface Instrument {
   id: number
   name: string
@@ -10,6 +11,7 @@ interface Instrument {
 export default function GetInstruments() {
   const [instruments, setInstruments] = useState<Instrument[]>([])
 
+  // Temp async function to prevent typescript errors
   useEffect(() => {
     async function getInstruments() {
       const { data } = await supabase.from('instruments').select()
