@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+// @ts-expect-error javascript file has no type declaration
 import { supabase } from '../lib/supabaseClient.js'
 
 interface Instrument {
