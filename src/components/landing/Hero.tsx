@@ -6,12 +6,14 @@
 //   768px+    stacked, photo cropped to 16:9 so it doesn't get very tall
 //   1024px+   1280 design: two equal columns (text card | photo), card stretches
 //             to the photo's height and centres its content vertically
-//   > 1280px  content stays 1280px wide and centred; the chestnut band is full-bleed
+//   1280px    matches the 1280 design exactly (columns are 604px each)
+//   1440px+   maximum width (max-w-page): content stays 1440px wide and centred;
+//             the chestnut band is full-bleed
 
 export function Hero() {
   return (
     <section className="bg-chestnut-primary">
-      <div className="mx-auto grid max-w-[1280px] gap-6 px-3 py-6 sm:px-6 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-page gap-6 px-3 py-6 sm:px-6 lg:grid-cols-2">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-chestnut-tertiary p-6">
           <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
             Learn to sew from simple projects

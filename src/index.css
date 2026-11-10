@@ -21,6 +21,15 @@
   /* Radius (Figma: radius-lg = 10px) */
   --radius-lg: 10px;
 
+  /*
+   * Wide breakpoint: adds a `wide:` variant that applies from 1440px up.
+   * Tailwind's default breakpoints (sm 640, md 768, lg 1024, xl 1280) are kept.
+   * 1440px is also the maximum content width (`max-w-page`); on wider screens
+   * the content stays 1440px wide and centred.
+   */
+  --breakpoint-wide: 90rem;
+  --container-page: 90rem;
+
   /* Type scale: size / line-height / letter-spacing */
   --text-h1: 40px;
   --text-h1--line-height: 50px;

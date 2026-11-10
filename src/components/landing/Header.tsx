@@ -1,11 +1,11 @@
 // Figma: "Header" — 412px (6005:3620) and 1280px (6017:370); identical layout.
-// The border runs the full width of the screen; the content stays within 1280px.
+// The border runs the full width of the screen; the content stays within 1440px (max-w-page).
 // Assets are expected in /public/landing/.
 
 export function Header() {
   return (
     <header className="border-b border-brand-border">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between px-6 pt-12 pb-2">
+      <div className="mx-auto flex max-w-page items-center justify-between px-6 pt-12 pb-2">
         <a href="/" aria-label="Unpicked home" className="block h-6 w-24">
           <img src="/landing/logo.svg" alt="Unpicked" className="size-full" />
         </a>
