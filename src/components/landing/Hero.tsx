@@ -10,6 +10,8 @@
 //   1440px+   maximum width (max-w-page): content stays 1440px wide and centred;
 //             the chestnut band is full-bleed
 
+import { Link } from 'react-router'
+
 export function Hero() {
   return (
     <section className="bg-chestnut-primary">
@@ -30,12 +32,12 @@ export function Hero() {
 
           <div className="flex flex-wrap gap-4">
             {/* Figma: "Button - Nova" (primary) */}
-            <a
-              href="#projects"
+            <Link
+              to="/projects"
               className="flex items-center justify-center rounded-lg bg-chestnut-primary px-2.5 py-2 text-body-sm font-medium whitespace-nowrap text-white hover:bg-chestnut-primary/90"
             >
               Let’s start sewing
-            </a>
+            </Link>
 
             {/* Figma: "Button - Nova" (outline) */}
             <a
