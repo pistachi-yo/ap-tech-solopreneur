@@ -8,8 +8,8 @@ Status: awaiting review
 
 Add two page templates to the Unpicked prototype, filled with test data from Supabase:
 
-1. **Pattern list** (`/patterns`): lists two sewing patterns (Cat Kicker Toy, Scrunchie), each with title, description, a placeholder photo, a "View instructions" button and a bookmark toggle.
-2. **Pattern instructions** (`/patterns/:id/instructions`): up to 10 steps per pattern, each with a placeholder photo and a "Mark complete" toggle.
+1. **Pattern list** (`/projects`): lists two sewing patterns (Cat Kicker Toy, Scrunchie), each with title, description, a placeholder photo, a "View instructions" button and a bookmark toggle.
+2. **Pattern instructions** (`/projects/:id/instructions`): up to 10 steps per pattern, each with a placeholder photo and a "Mark complete" toggle.
 
 Bookmarks and completed steps are stored against the signed-in user's profile. Both pages work on desktop and mobile.
 
@@ -54,20 +54,20 @@ Bookmarks and completed steps are stored against the signed-in user's profile. B
 
 ### 2. Routing and auth
 
-- Add `react-router`. Routes: `/` (landing, unchanged), `/patterns`, `/patterns/:id/instructions`, `/sign-in`.
+- Add `react-router`. Routes: `/` (landing, unchanged), `/projects`, `/projects/:id/instructions`, `/sign-in`.
 - Add an `AuthProvider` exposing the current user and session from `supabase.auth`, with email and password sign-in and sign-up on `/sign-in`.
 - Pattern pages are viewable signed out. Bookmark and step toggles require sign-in: a signed-out tap redirects to `/sign-in` and returns afterwards.
-- The landing page "Let's start sewing" and "Projects" links point to `/patterns`.
+- The landing page "Let's start sewing" and "Projects" links point to `/projects`.
 
-### 3. Pattern list page (`/patterns`)
+### 3. Pattern list page (`/projects`)
 
 - Reuses the landing `Header`. Page heading in Playfair Display.
 - Responsive grid: one column below 768px, two columns from 768px.
 - `PatternCard`: Unsplash image (16:9 crop), title, description, "View instructions" primary button, and a `BookmarkButton` (Lucide `Bookmark`, filled when bookmarked).
 
-### 4. Instructions page (`/patterns/:id/instructions`)
+### 4. Instructions page (`/projects/:id/instructions`)
 
-- Header block: pattern name, a back link to `/patterns`, and a progress bar reading "X of Y steps done" (signed-in only).
+- Header block: pattern name, a back link to `/projects`, and a progress bar reading "X of Y steps done" (signed-in only).
 - Steps in `step_number` order. `StepCard`: step number, title, description, Unsplash image, and a `StepToggle` ("Mark complete" / "Completed", Lucide `Check`).
 - Completed steps are visually muted with a check.
 - A missing or non-existent pattern id shows a friendly not-found message.

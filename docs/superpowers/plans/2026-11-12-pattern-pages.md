@@ -23,7 +23,7 @@
 - Fonts: `font-heading` (Playfair Display, weight 400) for headings, `font-sans` (Plus Jakarta Sans) for body; `text-body` 16px, `text-body-sm` 14px, buttons weight 500.
 - `rounded-lg` (10px); content width `max-w-page` (1440px), centred; side padding `px-3` on mobile and `sm:px-6` from 640px.
 - Pattern grid: one column below 768px, two columns from `md` (768px).
-- Routes: `/` (landing), `/patterns`, `/patterns/:id/instructions`, `/sign-in`.
+- Routes: `/` (landing), `/projects`, `/projects/:id/instructions`, `/sign-in`.
 - Pattern pages are viewable signed out; toggles require sign-in.
 - The migration is additive only (nullable `image_url` columns, seed inserts). No RLS policy changes.
 - No automated test framework is added (out of scope). Verification is `npx tsc -b`, `npx eslint .`, `npx vite build` plus manual and SQL checks.
@@ -34,7 +34,7 @@
 1. Signed-out user taps a bookmark or step toggle: redirected to `/sign-in`, then returned to the page they came from. (Tasks 3, 4)
 2. Email sign-up when Supabase email confirmation is on: no session is returned, so the page shows a "check your email" message instead of failing silently. (Task 3)
 3. A save fails (network error or RLS rejection): the toggle reverts and an inline error shows. (Tasks 4, 5)
-4. `/patterns/abc/instructions` or an id that does not exist: friendly not-found message, no crash. (Task 5)
+4. `/projects/abc/instructions` or an id that does not exist: friendly not-found message, no crash. (Task 5)
 5. Rapid double-tap on a toggle: ignored while a save is in flight, so there is no duplicate-key error. (Tasks 4, 5)
 6. A pattern or step with a null `image_url` renders without a broken image. (Tasks 4, 5)
 
@@ -99,11 +99,11 @@
 - Modify: `src/App.tsx`, `src/main.tsx`, `src/components/landing/Header.tsx`, `src/components/landing/Hero.tsx`
 
 **Interfaces:**
-- Produces: `AuthProvider({ children })`; `useAuth(): { user: User | null; loading: boolean; signIn(email: string, password: string): Promise<void>; signUp(email: string, password: string): Promise<{ needsConfirmation: boolean }>; signOut(): Promise<void> }`; routes `/`, `/patterns`, `/patterns/:id/instructions`, `/sign-in`; `SignIn` redirects to `location.state.from` (default `/patterns`) after sign-in.
+- Produces: `AuthProvider({ children })`; `useAuth(): { user: User | null; loading: boolean; signIn(email: string, password: string): Promise<void>; signUp(email: string, password: string): Promise<{ needsConfirmation: boolean }>; signOut(): Promise<void> }`; routes `/`, `/projects`, `/projects/:id/instructions`, `/sign-in`; `SignIn` redirects to `location.state.from` (default `/projects`) after sign-in.
 
 - [ ] **Step 1: Implement `AuthProvider`/`useAuth`** in `src/lib/auth.tsx` on `supabase.auth.getSession` and `onAuthStateChange`. `signUp` returns `needsConfirmation: true` when no session comes back.
 - [ ] **Step 2: Implement `SignIn`** with brand-styled shadcn `Card`, `Input`, `Label` and `Button`: email and password, a toggle between sign-in and sign-up, an inline error message, and a "check your email to confirm" message when `needsConfirmation` is true.
-- [ ] **Step 3: Wire the router** in `App.tsx` (`BrowserRouter` with the four routes; the two pattern routes can render a placeholder until Tasks 4 and 5), wrap in `AuthProvider` in `main.tsx`, and point the landing page links ("Let's start sewing", "Projects") at `/patterns` using router `Link`.
+- [ ] **Step 3: Wire the router** in `App.tsx` (`BrowserRouter` with the four routes; the two pattern routes can render a placeholder until Tasks 4 and 5), wrap in `AuthProvider` in `main.tsx`, and point the landing page links ("Let's start sewing", "Projects") at `/projects` using router `Link`.
 - [ ] **Step 4: Add `vercel.json`** with a rewrite of all paths to `/index.html` so deep links work on Vercel.
 - [ ] **Step 5: Verify.** `npx tsc -b && npx eslint . && npx vite build` pass. Manually: `npm run dev`, sign up with a test email, and confirm either a session (confirmation off) or the "check your email" message (confirmation on); confirm a `profiles` row or `auth.users` row exists via SQL.
 - [ ] **Step 6: Commit** `feat: add auth provider, sign-in page and routing`.
@@ -119,9 +119,9 @@
 - Produces: `usePatterns(): { patterns: Pattern[]; loading: boolean; error: string | null; reload(): void }`; `useBookmarks(): { bookmarkedIds: Set<number>; toggle(patternId: number): Promise<void>; error: string | null }` (empty set and no-op when signed out; ignores a toggle for an id already in flight; reverts on failure); `BookmarkButton({ patternId: number; bookmarked: boolean; onToggle(patternId: number): Promise<void> })` (when signed out, navigates to `/sign-in` with `state: { from: location.pathname }`); `PatternCard({ pattern: Pattern; bookmarked: boolean; onToggleBookmark(patternId: number): Promise<void> })`.
 
 - [ ] **Step 1: Implement `usePatterns`** (select all patterns ordered by `id`) and `useBookmarks` (select the user's `bookmarks`; `toggle` inserts or deletes with optimistic update and revert).
-- [ ] **Step 2: Implement `BookmarkButton`** (Lucide `Bookmark`, filled when bookmarked, `aria-pressed`, `aria-label`) and `PatternCard` (16:9 `object-cover` image, hidden or neutral block when `image_url` is null; title in `font-heading`; description; "View instructions" primary `Link` button to `/patterns/{id}/instructions`).
+- [ ] **Step 2: Implement `BookmarkButton`** (Lucide `Bookmark`, filled when bookmarked, `aria-pressed`, `aria-label`) and `PatternCard` (16:9 `object-cover` image, hidden or neutral block when `image_url` is null; title in `font-heading`; description; "View instructions" primary `Link` button to `/projects/{id}/instructions`).
 - [ ] **Step 3: Implement the `Patterns` page**: landing `Header`, page heading, `max-w-page` container with `px-3 sm:px-6`, grid `grid-cols-1 md:grid-cols-2 gap-6`, skeleton blocks while loading, an error message with a retry button, and the `useBookmarks` error shown inline.
-- [ ] **Step 4: Verify.** `npx tsc -b && npx eslint . && npx vite build` pass. Manually: both seeded patterns show with images; signed out, tapping bookmark goes to `/sign-in` and returns to `/patterns` after sign-in; signed in, bookmark, reload, and the bookmark persists; SQL `select * from bookmarks` shows one row under the user's id; double-tapping quickly leaves one row and no error; blocking the network makes the toggle revert with an error; a pattern with null `image_url` (temporarily null one) shows no broken image. Check at about 412px (one column) and 1280px (two columns).
+- [ ] **Step 4: Verify.** `npx tsc -b && npx eslint . && npx vite build` pass. Manually: both seeded patterns show with images; signed out, tapping bookmark goes to `/sign-in` and returns to `/projects` after sign-in; signed in, bookmark, reload, and the bookmark persists; SQL `select * from bookmarks` shows one row under the user's id; double-tapping quickly leaves one row and no error; blocking the network makes the toggle revert with an error; a pattern with null `image_url` (temporarily null one) shows no broken image. Check at about 412px (one column) and 1280px (two columns).
 - [ ] **Step 5: Commit** `feat: add pattern list page with bookmarks`.
 
 ### Task 5: Pattern instructions page
@@ -136,8 +136,8 @@
 
 - [ ] **Step 1: Implement `usePatternSteps`**, parsing `:id` with `Number` and treating `NaN` as not found, and `useStepProgress` (select the user's `instruction_progress` rows for the given step ids).
 - [ ] **Step 2: Implement `StepToggle`** (Lucide `Check`; "Mark complete" outline button / "Completed" filled state) and `StepCard` (step number, title in `font-heading`, description, image with null handling, toggle; muted styling when completed).
-- [ ] **Step 3: Implement `PatternInstructions`**: header with pattern name, back link to `/patterns`, shadcn `Progress` with "X of Y steps done" (signed in only), steps list, loading skeletons, error with retry, and a friendly not-found message with a link back to `/patterns`.
-- [ ] **Step 4: Verify.** `npx tsc -b && npx eslint . && npx vite build` pass. Manually: Cat Kicker Toy shows 10 steps, Scrunchie 8, in order; signed out, tapping a toggle goes to `/sign-in` and returns; signed in, completing steps updates the progress bar, and a reload keeps them; SQL `select * from instruction_progress` shows rows under the user's id and un-completing removes the row; `/patterns/abc/instructions` and `/patterns/9999/instructions` show the not-found message; double-tap and blocked-network cases behave as in Task 4; a step with null `image_url` shows no broken image. Check at about 412px and 1280px.
+- [ ] **Step 3: Implement `PatternInstructions`**: header with pattern name, back link to `/projects`, shadcn `Progress` with "X of Y steps done" (signed in only), steps list, loading skeletons, error with retry, and a friendly not-found message with a link back to `/projects`.
+- [ ] **Step 4: Verify.** `npx tsc -b && npx eslint . && npx vite build` pass. Manually: Cat Kicker Toy shows 10 steps, Scrunchie 8, in order; signed out, tapping a toggle goes to `/sign-in` and returns; signed in, completing steps updates the progress bar, and a reload keeps them; SQL `select * from instruction_progress` shows rows under the user's id and un-completing removes the row; `/projects/abc/instructions` and `/projects/9999/instructions` show the not-found message; double-tap and blocked-network cases behave as in Task 4; a step with null `image_url` shows no broken image. Check at about 412px and 1280px.
 - [ ] **Step 5: Commit** `feat: add pattern instructions page with step progress`.
 
 ### Task 6: Final checks and hand-off
