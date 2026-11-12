@@ -2,22 +2,44 @@
 // The border runs the full width of the screen; the content stays within 1440px (max-w-page).
 // Assets are expected in /public/landing/.
 
+import { Link } from 'react-router'
+import { useAuth } from '@/lib/auth'
+
 export function Header() {
+  const { user, signOut } = useAuth()
+
   return (
     <header className="border-b border-brand-border">
       <div className="mx-auto flex max-w-page items-center justify-between px-6 pt-12 pb-2">
-        <a href="/" aria-label="Unpicked home" className="block h-6 w-24">
+        <Link to="/" aria-label="Unpicked home" className="block h-6 w-24">
           <img src="/landing/logo.svg" alt="Unpicked" className="size-full" />
-        </a>
+        </Link>
 
         <nav className="flex items-center gap-2">
           {/* Figma: "Button - Nova" (ghost) */}
-          <a
-            href="#projects"
+          <Link
+            to="/projects"
             className="flex items-center justify-center rounded-lg px-2.5 py-2 text-body-sm font-medium text-chestnut-900 hover:bg-white/60"
           >
             Projects
-          </a>
+          </Link>
+
+          {user ? (
+            <button
+              type="button"
+              onClick={() => void signOut()}
+              className="flex items-center justify-center rounded-lg px-2.5 py-2 text-body-sm font-medium text-chestnut-900 hover:bg-white/60"
+            >
+              Sign out
+            </button>
+          ) : (
+            <Link
+              to="/sign-in"
+              className="flex items-center justify-center rounded-lg px-2.5 py-2 text-body-sm font-medium text-chestnut-900 hover:bg-white/60"
+            >
+              Sign in
+            </Link>
+          )}
 
           {/* Figma: "Icon Button - Nova" */}
           <button

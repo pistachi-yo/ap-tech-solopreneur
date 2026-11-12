@@ -1,3 +1,34 @@
+# Unpicked prototype
+
+## Setup
+
+Install dependencies (the pattern pages use `react-router`, Lucide, and the Radix primitives behind the shadcn-style components):
+
+```bash
+npm install
+npm install react-router lucide-react class-variance-authority clsx tailwind-merge @radix-ui/react-slot @radix-ui/react-progress @radix-ui/react-label
+```
+
+Create `.env.local` (git-ignored) and set the same two variables in Vercel:
+
+```
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_PUBLISHABLE_KEY=...
+```
+
+## Pattern pages
+
+| Route | Page |
+|---|---|
+| `/` | Landing page |
+| `/projects` | List of sewing patterns with bookmark toggles |
+| `/projects/:id/instructions` | Step-by-step instructions with per-step "Mark complete" |
+| `/sign-in` | Email and password sign-in / sign-up |
+
+Test data (Cat Kicker Toy, Scrunchie, and their steps with Unsplash placeholder photos) lives in the Supabase `patterns` and `pattern_instructions` tables. Bookmarks and completed steps are stored in `bookmarks` and `instruction_progress` for the signed-in user. `vercel.json` rewrites all paths to `index.html` so direct links work.
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
