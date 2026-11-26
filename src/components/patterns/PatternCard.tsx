@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { BookmarkButton } from '@/components/patterns/BookmarkButton'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -34,6 +35,9 @@ export function PatternCard({
         <div className="aspect-video w-full bg-brand-border/30" aria-hidden="true" />
       )}
       <CardHeader className="pt-6">
+        <Badge variant={pattern.skill_level === 'Advanced' ? 'advanced' : 'beginner'}>
+          {pattern.skill_level}
+        </Badge>
         <CardTitle>{pattern.pattern_name}</CardTitle>
       </CardHeader>
       <CardContent>
@@ -44,7 +48,7 @@ export function PatternCard({
       <CardFooter>
         <Button asChild>
           <Link to={`/projects/${pattern.id}/instructions`}>
-            View instructions
+            Start making
           </Link>
         </Button>
         <BookmarkButton

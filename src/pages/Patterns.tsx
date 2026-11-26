@@ -26,8 +26,11 @@ export default function Patterns() {
         )}
 
         {loading && (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2" aria-busy="true">
-            {[0, 1].map((key) => (
+          <div
+            className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+            aria-busy="true"
+          >
+            {[0, 1, 2].map((key) => (
               <div
                 key={key}
                 className="h-96 animate-pulse rounded-lg bg-brand-border/30"
@@ -52,7 +55,7 @@ export default function Patterns() {
         )}
 
         {!loading && !error && patterns.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {patterns.map((pattern) => (
               <PatternCard
                 key={pattern.id}

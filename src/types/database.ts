@@ -121,6 +121,7 @@ export type Database = {
           image_url: string | null
           pattern_description: string | null
           pattern_name: string
+          skill_level: string
         }
         Insert: {
           created_at?: string | null
@@ -128,6 +129,7 @@ export type Database = {
           image_url?: string | null
           pattern_description?: string | null
           pattern_name: string
+          skill_level?: string
         }
         Update: {
           created_at?: string | null
@@ -135,6 +137,7 @@ export type Database = {
           image_url?: string | null
           pattern_description?: string | null
           pattern_name?: string
+          skill_level?: string
         }
         Relationships: []
       }
