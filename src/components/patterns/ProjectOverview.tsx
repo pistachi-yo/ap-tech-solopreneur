@@ -127,12 +127,12 @@ export function ProjectOverview({
                         <Link
                           to={`/resources/${skill.resource.slug}`}
                           state={{ from: location.pathname }}
-                          className="inline-block rounded-lg border border-brand-border bg-chestnut-tertiary px-2.5 py-1 text-body-sm text-chestnut-900 hover:underline"
+                          className="inline-block rounded-full border border-brand-border bg-chestnut-tertiary px-3 py-1 text-body-sm text-chestnut-900 hover:underline"
                         >
                           {skill.label}
                         </Link>
                       ) : (
-                        <span className="inline-block rounded-lg border border-brand-border bg-chestnut-tertiary px-2.5 py-1 text-body-sm text-chestnut-900">
+                        <span className="inline-block rounded-full border border-brand-border bg-chestnut-tertiary px-3 py-1 text-body-sm text-chestnut-900">
                           {skill.label}
                         </span>
                       )}
