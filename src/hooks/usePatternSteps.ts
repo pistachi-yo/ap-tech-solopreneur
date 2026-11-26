@@ -12,6 +12,7 @@ import type {
 export interface ResourceRef {
   slug: string
   title: string
+  summary: string | null
 }
 
 export interface StepLink extends ResourceRef {
@@ -93,7 +94,7 @@ export function usePatternSteps(patternId: number | null): UsePatternStepsResult
           .eq('pattern_id', id)
           .order('position'),
         // The resource list is small; titles and slugs are joined in memory.
-        supabase.from('resources').select('id, slug, title'),
+        supabase.from('resources').select('id, slug, title, summary'),
       ])
       if (!active) return
       if (
@@ -130,7 +131,7 @@ export function usePatternSteps(patternId: number | null): UsePatternStepsResult
       const refs = new Map<number, ResourceRef>(
         resourcesResult.data.map((row) => [
           row.id,
-          { slug: row.slug, title: row.title },
+          { slug: row.slug, title: row.title, summary: row.summary },
         ]),
       )
       const refFor = (resourceId: number | null): ResourceRef | null =>

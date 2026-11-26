@@ -1,4 +1,4 @@
-import { Image as ImageIcon } from 'lucide-react'
+import { ChevronDown, Image as ImageIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { StepToggle } from '@/components/patterns/StepToggle'
@@ -51,21 +51,33 @@ export function StepCard({ step, completed, onToggle, links }: StepCardProps) {
               </p>
             )}
             {links && links.length > 0 && (
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-body-sm font-medium text-mushroom-primary">
-                  Learn more:
-                </span>
-                {links.map((link) => (
-                  <Link
-                    key={link.slug}
-                    to={`/resources/${link.slug}`}
-                    state={{ from: `${location.pathname}#step-${step.id}` }}
-                    className="rounded-lg border border-brand-border bg-chestnut-tertiary px-2.5 py-1 text-body-sm text-chestnut-900 hover:underline"
-                  >
-                    {link.label ?? link.title}
-                  </Link>
-                ))}
-              </div>
+              <details className="group rounded-lg border border-brand-border bg-chestnut-tertiary">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-body-sm font-medium text-chestnut-900 [&::-webkit-details-marker]:hidden">
+                  <span>Learn more</span>
+                  <ChevronDown
+                    className="size-4 shrink-0 transition-transform group-open:rotate-180"
+                    aria-hidden="true"
+                  />
+                </summary>
+                <ul className="flex flex-col gap-3 border-t border-brand-border/60 px-3 py-3">
+                  {links.map((link) => (
+                    <li key={link.slug}>
+                      <Link
+                        to={`/resources/${link.slug}`}
+                        state={{ from: `${location.pathname}#step-${step.id}` }}
+                        className="text-body-sm font-medium text-chestnut-primary underline underline-offset-2"
+                      >
+                        {link.label ?? link.title}
+                      </Link>
+                      {link.summary && (
+                        <p className="text-body-sm text-mushroom-primary">
+                          {link.summary}
+                        </p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </details>
             )}
           </CardContent>
         </div>
