@@ -280,6 +280,7 @@ export type Database = {
       }
       patterns: {
         Row: {
+          coming_soon: boolean
           created_at: string | null
           id: number
           image_url: string | null
@@ -288,6 +289,7 @@ export type Database = {
           skill_level: string
         }
         Insert: {
+          coming_soon?: boolean
           created_at?: string | null
           id?: number
           image_url?: string | null
@@ -296,6 +298,7 @@ export type Database = {
           skill_level?: string
         }
         Update: {
+          coming_soon?: boolean
           created_at?: string | null
           id?: number
           image_url?: string | null

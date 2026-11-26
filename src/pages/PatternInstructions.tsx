@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { Link, useLocation, useParams } from 'react-router'
 import { Header } from '@/components/landing/Header'
+import { ComingSoonBand } from '@/components/patterns/ComingSoonBand'
 import { ModeToggle } from '@/components/patterns/ModeToggle'
 import { ProjectOverview } from '@/components/patterns/ProjectOverview'
 import { StepCard } from '@/components/patterns/StepCard'
@@ -74,7 +75,10 @@ export default function PatternInstructions() {
   )
   const progressMessage = getProgressMessage(percent)
   const ready = !loading && !error && !notFound
-  const showProgress = ready && pattern !== null && !!user && steps.length > 0
+  // Projects marked "coming soon" never show their steps, even via a direct link.
+  const comingSoon = pattern?.coming_soon === true
+  const showProgress =
+    ready && pattern !== null && !comingSoon && !!user && steps.length > 0
 
   return (
     <div className="min-h-svh bg-chestnut-tertiary">
@@ -123,7 +127,25 @@ export default function PatternInstructions() {
           </div>
         )}
 
-        {ready && pattern && (
+        {ready && pattern && comingSoon && (
+          <div className="overflow-hidden rounded-lg border border-brand-border bg-white">
+            <ComingSoonBand className="py-4" />
+            <div className="flex flex-col items-start gap-4 p-6">
+              <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
+                {pattern.pattern_name}
+              </h1>
+              <p className="text-body text-chestnut-900">
+                We’re still working on the instructions for this project. Check
+                back soon, or start with another one.
+              </p>
+              <Button asChild>
+                <Link to="/projects">Browse projects</Link>
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {ready && pattern && !comingSoon && (
           <>
             <div className="flex flex-wrap items-center justify-between gap-4">
               <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
@@ -170,7 +192,7 @@ export default function PatternInstructions() {
         </div>
       )}
 
-      {ready && pattern && (
+      {ready && pattern && !comingSoon && (
         <div className={`mx-auto px-3 pt-8 pb-8 sm:px-6 ${widthClass}`}>
           {(progressError || checklistError) && (
             <p role="alert" className="mb-4 text-body-sm text-chestnut-primary">

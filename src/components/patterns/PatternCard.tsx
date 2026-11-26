@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { BookmarkButton } from '@/components/patterns/BookmarkButton'
+import { ComingSoonBand } from '@/components/patterns/ComingSoonBand'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 import type { Pattern } from '@/types/database'
 
 interface PatternCardProps {
@@ -29,11 +31,15 @@ export function PatternCard({
           src={pattern.image_url}
           alt={pattern.pattern_name}
           loading="lazy"
-          className="aspect-video w-full object-cover"
+          className={cn(
+            'aspect-video w-full object-cover',
+            pattern.coming_soon && 'grayscale-[60%]',
+          )}
         />
       ) : (
         <div className="aspect-video w-full bg-brand-border/30" aria-hidden="true" />
       )}
+      {pattern.coming_soon && <ComingSoonBand />}
       <CardHeader className="pt-6">
         <Badge variant={pattern.skill_level === 'Advanced' ? 'advanced' : 'beginner'}>
           {pattern.skill_level}
@@ -46,11 +52,17 @@ export function PatternCard({
         </p>
       </CardContent>
       <CardFooter>
-        <Button asChild>
-          <Link to={`/projects/${pattern.id}/instructions`}>
-            Start making
-          </Link>
-        </Button>
+        {pattern.coming_soon ? (
+          <p className="text-body-sm font-medium text-mushroom-primary">
+            Instructions aren’t available yet.
+          </p>
+        ) : (
+          <Button asChild>
+            <Link to={`/projects/${pattern.id}/instructions`}>
+              Start making
+            </Link>
+          </Button>
+        )}
         <BookmarkButton
           patternId={pattern.id}
           bookmarked={bookmarked}
