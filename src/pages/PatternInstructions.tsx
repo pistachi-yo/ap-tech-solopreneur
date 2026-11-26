@@ -77,23 +77,31 @@ export default function PatternInstructions() {
   const ready = !loading && !error && !notFound
   // Projects marked "coming soon" never show their steps, even via a direct link.
   const comingSoon = pattern?.coming_soon === true
+  const instructionsView = ready && pattern !== null && !comingSoon
   const showProgress =
     ready && pattern !== null && !comingSoon && !!user && steps.length > 0
 
   return (
     <div className="min-h-svh bg-chestnut-tertiary">
       <Header />
-      {ready && pattern && !comingSoon && (
-        // Secondary (mushroom) band: white on #846e5c is 4.8:1, which passes
-        // AAA for large text (the 40px heading).
-        <section className="bg-mushroom-primary">
-          <div className={`mx-auto px-3 py-10 sm:px-6 ${widthClass}`}>
+      {instructionsView && pattern && (
+        // White on chestnut-primary (#953623) is well above AAA for all text sizes.
+        <section className="bg-chestnut-primary">
+          <div className={`mx-auto px-3 pt-6 pb-10 sm:px-6 ${widthClass}`}>
+            <Link
+              to="/projects"
+              className="mb-6 inline-flex items-center gap-2 text-body-sm font-medium text-white hover:underline"
+            >
+              <ArrowLeft className="size-4" />
+              All projects
+            </Link>
             <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-white">
               {pattern.pattern_name}
             </h1>
           </div>
         </section>
       )}
+      {!instructionsView && (
       <main className={`mx-auto px-3 pt-8 pb-6 sm:px-6 ${widthClass}`}>
         <Link
           to="/projects"
@@ -156,19 +164,8 @@ export default function PatternInstructions() {
           </div>
         )}
 
-        {ready && pattern && !comingSoon && (
-          <>
-            <div className="flex justify-start sm:justify-end">
-              <ModeToggle experienced={experienced} onChange={setExperienced} />
-            </div>
-            {experienced && (
-              <p className="mt-2 text-body-sm text-mushroom-primary sm:text-right">
-                Additional tips and hints for beginners are hidden.
-              </p>
-            )}
-          </>
-        )}
       </main>
+      )}
 
       {showProgress && (
         <div className="w-full border-y border-brand-border bg-white">
@@ -202,6 +199,14 @@ export default function PatternInstructions() {
 
       {ready && pattern && !comingSoon && (
         <div className={`mx-auto px-3 pt-8 pb-8 sm:px-6 ${widthClass}`}>
+          <div className="mb-6 flex flex-col items-start gap-2 sm:items-end">
+            <ModeToggle experienced={experienced} onChange={setExperienced} />
+            {experienced && (
+              <p className="text-body-sm text-mushroom-primary">
+                Additional tips and hints for beginners are hidden.
+              </p>
+            )}
+          </div>
           {(progressError || checklistError) && (
             <p role="alert" className="mb-4 text-body-sm text-chestnut-primary">
               {progressError ?? checklistError}
