@@ -16,7 +16,10 @@ export function StepCard({ step, completed, onToggle, links }: StepCardProps) {
   const location = useLocation()
 
   return (
-    <Card className={cn('transition-opacity', completed && 'opacity-70')}>
+    <Card
+      id={`step-${step.id}`}
+      className={cn('scroll-mt-6 transition-opacity', completed && 'opacity-70')}
+    >
       {step.image_url && (
         <img
           src={step.image_url}
@@ -48,7 +51,7 @@ export function StepCard({ step, completed, onToggle, links }: StepCardProps) {
               <Link
                 key={link.slug}
                 to={`/resources/${link.slug}`}
-                state={{ from: location.pathname }}
+                state={{ from: `${location.pathname}#step-${step.id}` }}
                 className="rounded-lg border border-brand-border bg-chestnut-tertiary px-2.5 py-1 text-body-sm text-chestnut-900 hover:underline"
               >
                 {link.label ?? link.title}

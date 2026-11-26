@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { ArrowLeft } from 'lucide-react'
-import { Link, useParams } from 'react-router'
+import { Link, useLocation, useParams } from 'react-router'
 import { Header } from '@/components/landing/Header'
 import { ProjectOverview } from '@/components/patterns/ProjectOverview'
 import { StepCard } from '@/components/patterns/StepCard'
@@ -42,6 +42,13 @@ export default function PatternInstructions() {
     toggle: toggleItem,
     error: checklistError,
   } = useChecklistProgress(itemIds)
+
+  // Coming back from a resource page lands on the step the reader left.
+  const { hash } = useLocation()
+  useEffect(() => {
+    if (loading || !hash) return
+    document.getElementById(hash.slice(1))?.scrollIntoView()
+  }, [loading, hash])
 
   const completedCount = steps.filter((step) => completedIds.has(step.id)).length
   const percent = steps.length > 0 ? (completedCount / steps.length) * 100 : 0
@@ -135,7 +142,7 @@ export default function PatternInstructions() {
               </ol>
             ) : (
               <div className="mt-8 flex flex-col gap-8 lg:grid lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start">
-                <div className="lg:sticky lg:top-6">
+                <div className="lg:sticky lg:top-6 lg:max-h-[calc(100svh-3rem)] lg:overflow-y-auto">
                   <ProjectOverview
                     checklist={checklist}
                     skills={skills}
