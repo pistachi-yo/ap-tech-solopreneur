@@ -68,13 +68,13 @@ export default function PatternInstructions() {
       ] as const
     }),
   )
-  const showProgress =
-    !loading && !error && !notFound && pattern !== null && !!user && steps.length > 0
+  const ready = !loading && !error && !notFound
+  const showProgress = ready && pattern !== null && !!user && steps.length > 0
 
   return (
     <div className="min-h-svh bg-chestnut-tertiary">
       <Header />
-      <main className={`mx-auto px-3 py-8 sm:px-6 ${widthClass}`}>
+      <main className={`mx-auto px-3 pt-8 pb-6 sm:px-6 ${widthClass}`}>
         <Link
           to="/projects"
           className="mb-6 inline-flex items-center gap-2 text-body-sm font-medium text-chestnut-900 hover:underline"
@@ -118,82 +118,86 @@ export default function PatternInstructions() {
           </div>
         )}
 
-        {!loading && !error && !notFound && pattern && (
-          <>
-            <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
-              {pattern.pattern_name}
-            </h1>
-
-            {showProgress && (
-              <div className="mt-6 rounded-lg border border-brand-border bg-white p-4 sm:p-5">
-                <div className="mb-3 flex items-baseline justify-between gap-4">
-                  <p className="font-heading text-2xl font-normal text-chestnut-900">
-                    {completedCount === steps.length
-                      ? `All ${steps.length} steps done. Time for the kick test!`
-                      : `${completedCount} of ${steps.length} steps done`}
-                  </p>
-                  <p className="text-body font-medium text-chestnut-primary">
-                    {Math.round(percent)}%
-                  </p>
-                </div>
-                <Progress
-                  value={percent}
-                  className="h-4"
-                  aria-label="Steps completed"
-                />
-              </div>
-            )}
-
-            {(progressError || checklistError) && (
-              <p role="alert" className="mt-4 text-body-sm text-chestnut-primary">
-                {progressError ?? checklistError}
-              </p>
-            )}
-
-            {steps.length === 0 ? (
-              <p className="mt-8 text-body text-chestnut-900">
-                The steps for this project are coming soon.
-              </p>
-            ) : sections.length === 0 ? (
-              <ol className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-                {steps.map((step) => (
-                  <li key={step.id} className="flex">
-                    <div className="w-full">
-                      <StepCard
-                        step={step}
-                        completed={completedIds.has(step.id)}
-                        onToggle={toggle}
-                        links={stepLinks.get(step.id)}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <div className="mt-8 flex flex-col gap-6">
-                <ProjectOverview
-                  checklist={checklist}
-                  skills={skills}
-                  sections={sections}
-                  sectionProgress={sectionProgress}
-                  checkedIds={checkedIds}
-                  onToggleItem={toggleItem}
-                />
-                {sections.map((section) => (
-                  <StepSection
-                    key={section.id}
-                    section={section}
-                    steps={steps.filter((step) => step.section_id === section.id)}
-                    stepLinks={stepLinks}
-                    completedIds={completedIds}
-                    onToggle={toggle}
-                  />
-                ))}
-              </div>
-            )}
-          </>
+        {ready && pattern && (
+          <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
+            {pattern.pattern_name}
+          </h1>
         )}
       </main>
+
+      {showProgress && (
+        <div className="w-full border-y border-brand-border bg-white">
+          <div className={`mx-auto px-3 py-5 sm:px-6 ${widthClass}`}>
+            <div className="mb-3 flex items-baseline justify-between gap-4">
+              <p className="font-heading text-2xl font-normal text-chestnut-900">
+                {completedCount === steps.length
+                  ? `All ${steps.length} steps done. Time for the kick test!`
+                  : `${completedCount} of ${steps.length} steps done`}
+              </p>
+              <p className="text-body font-medium text-chestnut-primary">
+                {Math.round(percent)}%
+              </p>
+            </div>
+            <Progress
+              value={percent}
+              className="h-4"
+              aria-label="Steps completed"
+            />
+          </div>
+        </div>
+      )}
+
+      {ready && pattern && (
+        <div className={`mx-auto px-3 pt-8 pb-8 sm:px-6 ${widthClass}`}>
+          {(progressError || checklistError) && (
+            <p role="alert" className="mb-4 text-body-sm text-chestnut-primary">
+              {progressError ?? checklistError}
+            </p>
+          )}
+
+          {steps.length === 0 ? (
+            <p className="text-body text-chestnut-900">
+              The steps for this project are coming soon.
+            </p>
+          ) : sections.length === 0 ? (
+            <ol className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {steps.map((step) => (
+                <li key={step.id} className="flex">
+                  <div className="w-full">
+                    <StepCard
+                      step={step}
+                      completed={completedIds.has(step.id)}
+                      onToggle={toggle}
+                      links={stepLinks.get(step.id)}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <div className="flex flex-col gap-6">
+              <ProjectOverview
+                checklist={checklist}
+                skills={skills}
+                sections={sections}
+                sectionProgress={sectionProgress}
+                checkedIds={checkedIds}
+                onToggleItem={toggleItem}
+              />
+              {sections.map((section) => (
+                <StepSection
+                  key={section.id}
+                  section={section}
+                  steps={steps.filter((step) => step.section_id === section.id)}
+                  stepLinks={stepLinks}
+                  completedIds={completedIds}
+                  onToggle={toggle}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
