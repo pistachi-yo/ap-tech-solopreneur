@@ -2,9 +2,12 @@ import { useMemo } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { Header } from '@/components/landing/Header'
+import { ProjectOverview } from '@/components/patterns/ProjectOverview'
 import { StepCard } from '@/components/patterns/StepCard'
+import { StepSection } from '@/components/patterns/StepSection'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { useChecklistProgress } from '@/hooks/useChecklistProgress'
 import { usePatternSteps } from '@/hooks/usePatternSteps'
 import { useStepProgress } from '@/hooks/useStepProgress'
 import { useAuth } from '@/lib/auth'
@@ -15,14 +18,30 @@ export default function PatternInstructions() {
   const patternId = id && /^\d+$/.test(id) ? Number(id) : null
 
   const { user } = useAuth()
-  const { pattern, steps, loading, error, notFound, reload } =
-    usePatternSteps(patternId)
+  const {
+    pattern,
+    steps,
+    sections,
+    stepLinks,
+    checklist,
+    skills,
+    loading,
+    error,
+    notFound,
+    reload,
+  } = usePatternSteps(patternId)
   const stepIds = useMemo(() => steps.map((step) => step.id), [steps])
+  const itemIds = useMemo(() => checklist.map((item) => item.id), [checklist])
   const {
     completedIds,
     toggle,
     error: progressError,
   } = useStepProgress(stepIds)
+  const {
+    checkedIds,
+    toggle: toggleItem,
+    error: checklistError,
+  } = useChecklistProgress(itemIds)
 
   const completedCount = steps.filter((step) => completedIds.has(step.id)).length
   const percent = steps.length > 0 ? (completedCount / steps.length) * 100 : 0
@@ -89,9 +108,9 @@ export default function PatternInstructions() {
               </div>
             )}
 
-            {progressError && (
+            {(progressError || checklistError) && (
               <p role="alert" className="mt-4 text-body-sm text-chestnut-primary">
-                {progressError}
+                {progressError ?? checklistError}
               </p>
             )}
 
@@ -99,7 +118,7 @@ export default function PatternInstructions() {
               <p className="mt-8 text-body text-chestnut-900">
                 The steps for this project are coming soon.
               </p>
-            ) : (
+            ) : sections.length === 0 ? (
               <ol className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
                 {steps.map((step) => (
                   <li key={step.id} className="flex">
@@ -108,11 +127,36 @@ export default function PatternInstructions() {
                         step={step}
                         completed={completedIds.has(step.id)}
                         onToggle={toggle}
+                        links={stepLinks.get(step.id)}
                       />
                     </div>
                   </li>
                 ))}
               </ol>
+            ) : (
+              <div className="mt-8 flex flex-col gap-8 lg:grid lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start">
+                <div className="lg:sticky lg:top-6">
+                  <ProjectOverview
+                    checklist={checklist}
+                    skills={skills}
+                    sections={sections}
+                    checkedIds={checkedIds}
+                    onToggleItem={toggleItem}
+                  />
+                </div>
+                <div className="flex flex-col gap-6">
+                  {sections.map((section) => (
+                    <StepSection
+                      key={section.id}
+                      section={section}
+                      steps={steps.filter((step) => step.section_id === section.id)}
+                      stepLinks={stepLinks}
+                      completedIds={completedIds}
+                      onToggle={toggle}
+                    />
+                  ))}
+                </div>
+              </div>
             )}
           </>
         )}
