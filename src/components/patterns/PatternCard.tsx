@@ -25,7 +25,7 @@ export function PatternCard({
   onToggleBookmark,
 }: PatternCardProps) {
   return (
-    <Card>
+    <Card className={cn(pattern.coming_soon && 'bg-brand-border/15')}>
       {pattern.image_url ? (
         <img
           src={pattern.image_url}
@@ -33,42 +33,46 @@ export function PatternCard({
           loading="lazy"
           className={cn(
             'aspect-video w-full object-cover',
-            pattern.coming_soon && 'grayscale-[60%]',
+            pattern.coming_soon && 'grayscale',
           )}
         />
       ) : (
         <div className="aspect-video w-full bg-brand-border/30" aria-hidden="true" />
       )}
       {pattern.coming_soon && <ComingSoonBand />}
-      <CardHeader className="pt-6">
-        <Badge variant={pattern.skill_level === 'Advanced' ? 'advanced' : 'beginner'}>
-          {pattern.skill_level}
-        </Badge>
-        <CardTitle>{pattern.pattern_name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-body text-chestnut-900">
-          {pattern.pattern_description}
-        </p>
-      </CardContent>
-      <CardFooter>
-        {pattern.coming_soon ? (
-          <p className="text-body-sm font-medium text-mushroom-primary">
-            Instructions aren’t available yet.
+      <div
+        className={cn('flex flex-1 flex-col', pattern.coming_soon && 'opacity-60')}
+      >
+        <CardHeader className="pt-6">
+          <Badge variant={pattern.skill_level === 'Advanced' ? 'advanced' : 'beginner'}>
+            {pattern.skill_level}
+          </Badge>
+          <CardTitle>{pattern.pattern_name}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-body text-chestnut-900">
+            {pattern.pattern_description}
           </p>
-        ) : (
-          <Button asChild>
-            <Link to={`/projects/${pattern.id}/instructions`}>
-              Start making
-            </Link>
-          </Button>
-        )}
-        <BookmarkButton
-          patternId={pattern.id}
-          bookmarked={bookmarked}
-          onToggle={onToggleBookmark}
-        />
-      </CardFooter>
+        </CardContent>
+        <CardFooter>
+          {pattern.coming_soon ? (
+            <p className="text-body-sm font-medium text-mushroom-primary">
+              Instructions aren’t available yet.
+            </p>
+          ) : (
+            <Button asChild>
+              <Link to={`/projects/${pattern.id}/instructions`}>
+                Start making
+              </Link>
+            </Button>
+          )}
+          <BookmarkButton
+            patternId={pattern.id}
+            bookmarked={bookmarked}
+            onToggle={onToggleBookmark}
+          />
+        </CardFooter>
+      </div>
     </Card>
   )
 }
