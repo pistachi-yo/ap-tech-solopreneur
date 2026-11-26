@@ -83,6 +83,17 @@ export default function PatternInstructions() {
   return (
     <div className="min-h-svh bg-chestnut-tertiary">
       <Header />
+      {ready && pattern && !comingSoon && (
+        // Secondary (mushroom) band: white on #846e5c is 4.8:1, which passes
+        // AAA for large text (the 40px heading).
+        <section className="bg-mushroom-primary">
+          <div className={`mx-auto px-3 py-10 sm:px-6 ${widthClass}`}>
+            <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-white">
+              {pattern.pattern_name}
+            </h1>
+          </div>
+        </section>
+      )}
       <main className={`mx-auto px-3 pt-8 pb-6 sm:px-6 ${widthClass}`}>
         <Link
           to="/projects"
@@ -147,10 +158,7 @@ export default function PatternInstructions() {
 
         {ready && pattern && !comingSoon && (
           <>
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
-                {pattern.pattern_name}
-              </h1>
+            <div className="flex justify-start sm:justify-end">
               <ModeToggle experienced={experienced} onChange={setExperienced} />
             </div>
             {experienced && (
