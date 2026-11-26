@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { Link, useLocation, useParams } from 'react-router'
 import { Header } from '@/components/landing/Header'
-import { ModePanel } from '@/components/patterns/ModePanel'
+import { ModeToggle } from '@/components/patterns/ModeToggle'
 import { ProjectOverview } from '@/components/patterns/ProjectOverview'
 import { StepCard } from '@/components/patterns/StepCard'
 import { StepSection } from '@/components/patterns/StepSection'
@@ -123,12 +123,17 @@ export default function PatternInstructions() {
 
         {ready && pattern && (
           <>
-            <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
                 {pattern.pattern_name}
               </h1>
-              <ModePanel experienced={experienced} onChange={setExperienced} />
+              <ModeToggle experienced={experienced} onChange={setExperienced} />
             </div>
+            {experienced && (
+              <p className="mt-2 text-body-sm text-mushroom-primary sm:text-right">
+                Additional tips and hints for beginners are hidden.
+              </p>
+            )}
           </>
         )}
       </main>
