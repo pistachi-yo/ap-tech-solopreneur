@@ -39,6 +39,47 @@ export function StepCard({
   const collapsed = completed && !detailsOpen
   const title = step.title ?? `Step ${step.step_number}`
   const bodyId = `step-body-${step.id}`
+  const detailsLink = (
+    <button
+      type="button"
+      aria-expanded={detailsOpen}
+      aria-controls={bodyId}
+      onClick={() => setDetailsOpen((open) => !open)}
+      className="rounded-sm text-body-sm font-medium text-chestnut-primary underline underline-offset-2 outline-none focus-visible:ring-2 focus-visible:ring-chestnut-primary"
+    >
+      {detailsOpen ? 'Hide step' : 'View step'}
+    </button>
+  )
+
+  // Collapsed: one compact line, number and title on the left, the toggle
+  // with a "View step" link under it on the right.
+  if (collapsed) {
+    return (
+      <Card
+        id={`step-${step.id}`}
+        className="scroll-mt-6 opacity-70 transition-opacity"
+      >
+        <div id={bodyId} className="flex items-center justify-between gap-3 px-6 py-3">
+          <div className="flex min-w-0 items-baseline gap-3">
+            <p className="shrink-0 text-body-sm font-medium text-mushroom-primary">
+              Step {step.step_number}
+            </p>
+            <h2 className="truncate font-heading text-lg font-normal text-chestnut-900">
+              {title}
+            </h2>
+          </div>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            <StepToggle
+              stepId={step.id}
+              completed={completed}
+              onToggle={onToggle}
+            />
+            {detailsLink}
+          </div>
+        </div>
+      </Card>
+    )
+  }
 
   return (
     <Card
@@ -49,45 +90,23 @@ export function StepCard({
           stacked (photo last) in narrow cards. */}
       <div className="grid grid-cols-1 @2xl:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="flex flex-col">
-          <CardHeader className={cn('pt-6', collapsed && 'pb-6')}>
+          <CardHeader className="pt-6">
             <div className="flex items-center justify-between gap-3">
               <p className="text-body-sm font-medium text-mushroom-primary">
                 Step {step.step_number}
               </p>
-              <StepToggle
-                stepId={step.id}
-                completed={completed}
-                onToggle={onToggle}
-              />
+              <div className="flex flex-col items-end gap-1">
+                <StepToggle
+                  stepId={step.id}
+                  completed={completed}
+                  onToggle={onToggle}
+                />
+                {completed && detailsLink}
+              </div>
             </div>
-            {completed ? (
-              <CardTitle>
-                <button
-                  type="button"
-                  aria-expanded={detailsOpen}
-                  aria-controls={bodyId}
-                  onClick={() => setDetailsOpen((open) => !open)}
-                  className="flex w-full items-center justify-between gap-3 rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-chestnut-primary"
-                >
-                  <span>{title}</span>
-                  <span className="flex shrink-0 items-center gap-1 font-sans text-body-sm font-medium text-chestnut-900">
-                    {detailsOpen ? 'Hide details' : 'Show details'}
-                    <ChevronDown
-                      className={cn('size-4 transition-transform', detailsOpen && 'rotate-180')}
-                      aria-hidden="true"
-                    />
-                  </span>
-                </button>
-              </CardTitle>
-            ) : (
-              <CardTitle>{title}</CardTitle>
-            )}
+            <CardTitle>{title}</CardTitle>
           </CardHeader>
-          <CardContent
-            id={bodyId}
-            hidden={collapsed}
-            className="flex flex-col gap-3"
-          >
+          <CardContent id={bodyId} className="flex flex-col gap-3">
             <p className="text-body text-chestnut-900">{step.description}</p>
             {!experienced && step.why && (
               <p className="text-body-sm text-chestnut-900">
@@ -128,7 +147,6 @@ export function StepCard({
         </div>
 
         <figure
-          hidden={collapsed}
           className="flex flex-col gap-2 px-6 pb-6 @2xl:pt-6 @2xl:pl-0"
         >
           {showImage ? (
