@@ -9,6 +9,7 @@ interface StepSectionProps {
   stepLinks: Map<number, StepLink[]>
   completedIds: Set<number>
   onToggle: (stepId: number) => Promise<void>
+  experienced: boolean
 }
 
 export function StepSection({
@@ -17,6 +18,7 @@ export function StepSection({
   stepLinks,
   completedIds,
   onToggle,
+  experienced,
 }: StepSectionProps) {
   const done = steps.filter((step) => completedIds.has(step.id)).length
 
@@ -55,6 +57,7 @@ export function StepSection({
               completed={completedIds.has(step.id)}
               onToggle={onToggle}
               links={stepLinks.get(step.id)}
+              experienced={experienced}
             />
           </li>
         ))}

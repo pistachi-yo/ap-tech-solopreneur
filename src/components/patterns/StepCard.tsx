@@ -12,9 +12,16 @@ interface StepCardProps {
   completed: boolean
   onToggle: (stepId: number) => Promise<void>
   links?: StepLink[]
+  experienced?: boolean
 }
 
-export function StepCard({ step, completed, onToggle, links }: StepCardProps) {
+export function StepCard({
+  step,
+  completed,
+  onToggle,
+  links,
+  experienced = false,
+}: StepCardProps) {
   const location = useLocation()
   // A photo that fails to load falls back to the empty photo area.
   const [imageFailed, setImageFailed] = useState(false)
@@ -44,13 +51,13 @@ export function StepCard({ step, completed, onToggle, links }: StepCardProps) {
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <p className="text-body text-chestnut-900">{step.description}</p>
-            {step.why && (
+            {!experienced && step.why && (
               <p className="text-body-sm text-chestnut-900">
                 <span className="font-medium">Why: </span>
                 {step.why}
               </p>
             )}
-            {links && links.length > 0 && (
+            {!experienced && links && links.length > 0 && (
               <details className="group rounded-lg border border-brand-border bg-chestnut-tertiary">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-body-sm font-medium text-chestnut-900 [&::-webkit-details-marker]:hidden">
                   <span>Learn more</span>

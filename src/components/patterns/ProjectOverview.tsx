@@ -18,6 +18,7 @@ interface ProjectOverviewProps {
   sectionProgress: Map<number, SectionProgress>
   checkedIds: Set<number>
   onToggleItem: (itemId: number) => Promise<void>
+  experienced: boolean
 }
 
 // One "Learn more" page per checklist category (slugs live in `resources`).
@@ -33,6 +34,7 @@ export function ProjectOverview({
   sectionProgress,
   checkedIds,
   onToggleItem,
+  experienced,
 }: ProjectOverviewProps) {
   const location = useLocation()
   // Open on larger screens, collapsed on phones so the steps come first.
@@ -43,7 +45,8 @@ export function ProjectOverview({
   )
 
   const checkedCount = checklist.filter((item) => checkedIds.has(item.id)).length
-  const hasChecklist = checklist.length > 0 || skills.length > 0
+  const showSkills = !experienced && skills.length > 0
+  const hasChecklist = checklist.length > 0 || showSkills
 
   if (!hasChecklist && sections.length === 0) return null
 
@@ -112,7 +115,7 @@ export function ProjectOverview({
               })}
             </div>
 
-            {skills.length > 0 && (
+            {showSkills && (
               <section>
                 <h3 className="mb-3 text-body font-medium text-chestnut-900">
                   Skills you’ll learn

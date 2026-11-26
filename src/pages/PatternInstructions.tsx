@@ -2,12 +2,14 @@ import { useEffect, useMemo } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { Link, useLocation, useParams } from 'react-router'
 import { Header } from '@/components/landing/Header'
+import { ModeToggle } from '@/components/patterns/ModeToggle'
 import { ProjectOverview } from '@/components/patterns/ProjectOverview'
 import { StepCard } from '@/components/patterns/StepCard'
 import { StepSection } from '@/components/patterns/StepSection'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useChecklistProgress } from '@/hooks/useChecklistProgress'
+import { useExperiencedMode } from '@/hooks/useExperiencedMode'
 import { usePatternSteps } from '@/hooks/usePatternSteps'
 import { useStepProgress } from '@/hooks/useStepProgress'
 import { useAuth } from '@/lib/auth'
@@ -18,6 +20,7 @@ export default function PatternInstructions() {
   const patternId = id && /^\d+$/.test(id) ? Number(id) : null
 
   const { user } = useAuth()
+  const [experienced, setExperienced] = useExperiencedMode()
   const {
     pattern,
     steps,
@@ -119,9 +122,19 @@ export default function PatternInstructions() {
         )}
 
         {ready && pattern && (
-          <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
-            {pattern.pattern_name}
-          </h1>
+          <>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
+                {pattern.pattern_name}
+              </h1>
+              <ModeToggle experienced={experienced} onChange={setExperienced} />
+            </div>
+            {experienced && (
+              <p className="mt-2 text-body-sm text-mushroom-primary sm:text-right">
+                Additional tips and hints for beginners are hidden.
+              </p>
+            )}
+          </>
         )}
       </main>
 
@@ -169,6 +182,7 @@ export default function PatternInstructions() {
                       completed={completedIds.has(step.id)}
                       onToggle={toggle}
                       links={stepLinks.get(step.id)}
+                      experienced={experienced}
                     />
                   </div>
                 </li>
@@ -183,6 +197,7 @@ export default function PatternInstructions() {
                 sectionProgress={sectionProgress}
                 checkedIds={checkedIds}
                 onToggleItem={toggleItem}
+                experienced={experienced}
               />
               {sections.map((section) => (
                 <StepSection
@@ -192,6 +207,7 @@ export default function PatternInstructions() {
                   stepLinks={stepLinks}
                   completedIds={completedIds}
                   onToggle={toggle}
+                  experienced={experienced}
                 />
               ))}
             </div>
