@@ -2,7 +2,7 @@ import { Image as ImageIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { StepToggle } from '@/components/patterns/StepToggle'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { StepLink } from '@/hooks/usePatternSteps'
 import { cn } from '@/lib/utils'
 import type { PatternStep } from '@/types/database'
@@ -30,9 +30,16 @@ export function StepCard({ step, completed, onToggle, links }: StepCardProps) {
       <div className="grid grid-cols-1 @2xl:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="flex flex-col">
           <CardHeader className="pt-6">
-            <p className="text-body-sm font-medium text-mushroom-primary">
-              Step {step.step_number}
-            </p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-body-sm font-medium text-mushroom-primary">
+                Step {step.step_number}
+              </p>
+              <StepToggle
+                stepId={step.id}
+                completed={completed}
+                onToggle={onToggle}
+              />
+            </div>
             <CardTitle>{step.title ?? `Step ${step.step_number}`}</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
@@ -61,9 +68,6 @@ export function StepCard({ step, completed, onToggle, links }: StepCardProps) {
               </div>
             )}
           </CardContent>
-          <CardFooter>
-            <StepToggle stepId={step.id} completed={completed} onToggle={onToggle} />
-          </CardFooter>
         </div>
 
         <figure className="flex flex-col gap-2 px-6 pb-6 @2xl:pt-6 @2xl:pl-0">
