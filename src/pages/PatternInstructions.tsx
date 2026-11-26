@@ -146,7 +146,7 @@ export default function PatternInstructions() {
             <div className="mb-3 flex items-baseline justify-between gap-4">
               <p className="font-heading text-2xl font-normal text-chestnut-900">
                 {completedCount === steps.length
-                  ? `All ${steps.length} steps done. Nice work!`
+                  ? `All ${steps.length} steps done. Take a bow, you did it!`
                   : `${completedCount} of ${steps.length} steps done`}
               </p>
               <p className="text-body font-medium text-chestnut-primary">
