@@ -95,7 +95,8 @@ export function StepCard({
               <p className="text-body-sm font-medium text-mushroom-primary">
                 Step {step.step_number}
               </p>
-              <div className="flex flex-col items-end gap-1">
+              {/* Narrow cards: toggle at the top. Wide cards show it above the photo. */}
+              <div className="flex flex-col items-end gap-1 @2xl:hidden">
                 <StepToggle
                   stepId={step.id}
                   completed={completed}
@@ -146,8 +147,17 @@ export function StepCard({
           </CardContent>
         </div>
 
+        <div className="flex flex-col gap-3 px-6 pb-6 @2xl:pt-6 @2xl:pl-0">
+          <div className="hidden flex-col items-end gap-1 @2xl:flex">
+            <StepToggle
+              stepId={step.id}
+              completed={completed}
+              onToggle={onToggle}
+            />
+            {completed && detailsLink}
+          </div>
         <figure
-          className="flex flex-col gap-2 px-6 pb-6 @2xl:pt-6 @2xl:pl-0"
+          className="flex flex-col gap-2"
         >
           {showImage ? (
             <img
@@ -173,6 +183,7 @@ export function StepCard({
             </figcaption>
           )}
         </figure>
+        </div>
       </div>
     </Card>
   )
