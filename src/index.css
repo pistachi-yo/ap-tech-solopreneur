@@ -13,7 +13,7 @@
   --color-chestnut-tertiary: #ffece8;
   --color-mushroom-primary: #846e5c;
   --color-brand-border: #ca9a91;
-  /* Warm accent for "coming soon" states; chestnut-900 text on it is about 10:1. */
+  /* Warm accent for "coming soon" states; chestnut-900 text on it is 9.56:1 (WCAG AAA needs 7:1). */
   --color-saffron-primary: #f2b84b;
 
   /* Fonts */
