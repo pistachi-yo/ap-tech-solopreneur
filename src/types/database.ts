@@ -158,6 +158,7 @@ export type Database = {
           created_at: string
           description: string
           id: number
+          image_credit: string | null
           image_url: string | null
           pattern_id: number
           section_id: number | null
@@ -169,6 +170,7 @@ export type Database = {
           created_at?: string
           description: string
           id?: number
+          image_credit?: string | null
           image_url?: string | null
           pattern_id: number
           section_id?: number | null
@@ -180,6 +182,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: number
+          image_credit?: string | null
           image_url?: string | null
           pattern_id?: number
           section_id?: number | null
