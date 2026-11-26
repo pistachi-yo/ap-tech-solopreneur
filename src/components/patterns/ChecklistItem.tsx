@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { useAuth } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import type { ChecklistEntry } from '@/hooks/usePatternSteps'
@@ -28,45 +28,42 @@ export function ChecklistItemRow({
   }
 
   return (
-    <li className="flex items-start gap-3">
+    <li>
       <button
         type="button"
         role="checkbox"
         aria-checked={checked}
-        aria-label={item.name}
         onClick={handleClick}
-        className={cn(
-          'mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border border-chestnut-primary outline-none focus-visible:ring-2 focus-visible:ring-chestnut-primary focus-visible:ring-offset-2',
-          checked ? 'bg-chestnut-primary text-white' : 'bg-white',
-        )}
+        className="flex w-full items-start gap-3 rounded-lg py-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-chestnut-primary"
       >
-        {checked && <Check className="size-3.5" aria-hidden="true" />}
-      </button>
-      <div className="min-w-0">
-        <p
+        <span
+          aria-hidden="true"
           className={cn(
-            'text-body-sm text-chestnut-900',
-            checked && 'line-through opacity-70',
+            'mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border border-chestnut-primary',
+            checked ? 'bg-chestnut-primary text-white' : 'bg-white',
           )}
         >
-          {item.name}
-          {item.optional && (
-            <span className="ml-2 text-mushroom-primary">(optional)</span>
-          )}
-        </p>
-        {item.note && (
-          <p className="text-body-sm text-mushroom-primary">{item.note}</p>
-        )}
-        {item.resource && (
-          <Link
-            to={`/resources/${item.resource.slug}`}
-            state={{ from: location.pathname }}
-            className="text-body-sm font-medium text-chestnut-primary underline underline-offset-2"
+          {checked && <Check className="size-3.5" />}
+        </span>
+        <span className="min-w-0">
+          <span
+            className={cn(
+              'block text-body-sm text-chestnut-900',
+              checked && 'line-through opacity-70',
+            )}
           >
-            Learn more
-          </Link>
-        )}
-      </div>
+            {item.name}
+            {item.optional && (
+              <span className="ml-2 text-mushroom-primary">(optional)</span>
+            )}
+          </span>
+          {item.note && (
+            <span className="block text-body-sm text-mushroom-primary">
+              {item.note}
+            </span>
+          )}
+        </span>
+      </button>
     </li>
   )
 }

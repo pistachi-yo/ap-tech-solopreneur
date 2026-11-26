@@ -53,10 +53,49 @@ export default function PatternInstructions() {
   const completedCount = steps.filter((step) => completedIds.has(step.id)).length
   const percent = steps.length > 0 ? (completedCount / steps.length) * 100 : 0
 
+  // Sectioned projects read best in a narrower column; others keep the wide grid.
+  const sectioned = sections.length > 0 && steps.length > 0
+  const widthClass = sectioned ? 'max-w-4xl' : 'max-w-page'
+  const sectionProgress = new Map(
+    sections.map((section) => {
+      const inSection = steps.filter((step) => step.section_id === section.id)
+      return [
+        section.id,
+        {
+          done: inSection.filter((step) => completedIds.has(step.id)).length,
+          total: inSection.length,
+        },
+      ] as const
+    }),
+  )
+  const showProgress =
+    !loading && !error && !notFound && pattern !== null && !!user && steps.length > 0
+
   return (
     <div className="min-h-svh bg-chestnut-tertiary">
       <Header />
-      <main className="mx-auto max-w-page px-3 py-8 sm:px-6">
+      {showProgress && (
+        <div className="w-full border-b border-brand-border bg-white">
+          <div className={`mx-auto px-3 py-5 sm:px-6 ${widthClass}`}>
+            <div className="mb-3 flex items-baseline justify-between gap-4">
+              <p className="font-heading text-2xl font-normal text-chestnut-900">
+                {completedCount === steps.length
+                  ? `All ${steps.length} steps done. Time for the kick test!`
+                  : `${completedCount} of ${steps.length} steps done`}
+              </p>
+              <p className="text-body font-medium text-chestnut-primary">
+                {Math.round(percent)}%
+              </p>
+            </div>
+            <Progress
+              value={percent}
+              className="h-4"
+              aria-label="Steps completed"
+            />
+          </div>
+        </div>
+      )}
+      <main className={`mx-auto px-3 py-8 sm:px-6 ${widthClass}`}>
         <Link
           to="/projects"
           className="mb-6 inline-flex items-center gap-2 text-body-sm font-medium text-chestnut-900 hover:underline"
@@ -106,15 +145,6 @@ export default function PatternInstructions() {
               {pattern.pattern_name}
             </h1>
 
-            {user && steps.length > 0 && (
-              <div className="mt-6 flex max-w-xl flex-col gap-2">
-                <p className="text-body-sm font-medium text-chestnut-900">
-                  {completedCount} of {steps.length} steps done
-                </p>
-                <Progress value={percent} aria-label="Steps completed" />
-              </div>
-            )}
-
             {(progressError || checklistError) && (
               <p role="alert" className="mt-4 text-body-sm text-chestnut-primary">
                 {progressError ?? checklistError}
@@ -141,28 +171,25 @@ export default function PatternInstructions() {
                 ))}
               </ol>
             ) : (
-              <div className="mt-8 flex flex-col gap-8 lg:grid lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start">
-                <div className="lg:sticky lg:top-6 lg:max-h-[calc(100svh-3rem)] lg:overflow-y-auto">
-                  <ProjectOverview
-                    checklist={checklist}
-                    skills={skills}
-                    sections={sections}
-                    checkedIds={checkedIds}
-                    onToggleItem={toggleItem}
+              <div className="mt-8 flex flex-col gap-6">
+                <ProjectOverview
+                  checklist={checklist}
+                  skills={skills}
+                  sections={sections}
+                  sectionProgress={sectionProgress}
+                  checkedIds={checkedIds}
+                  onToggleItem={toggleItem}
+                />
+                {sections.map((section) => (
+                  <StepSection
+                    key={section.id}
+                    section={section}
+                    steps={steps.filter((step) => step.section_id === section.id)}
+                    stepLinks={stepLinks}
+                    completedIds={completedIds}
+                    onToggle={toggle}
                   />
-                </div>
-                <div className="flex flex-col gap-6">
-                  {sections.map((section) => (
-                    <StepSection
-                      key={section.id}
-                      section={section}
-                      steps={steps.filter((step) => step.section_id === section.id)}
-                      stepLinks={stepLinks}
-                      completedIds={completedIds}
-                      onToggle={toggle}
-                    />
-                  ))}
-                </div>
+                ))}
               </div>
             )}
           </>
