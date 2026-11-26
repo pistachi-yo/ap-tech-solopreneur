@@ -74,27 +74,6 @@ export default function PatternInstructions() {
   return (
     <div className="min-h-svh bg-chestnut-tertiary">
       <Header />
-      {showProgress && (
-        <div className="w-full border-b border-brand-border bg-white">
-          <div className={`mx-auto px-3 py-5 sm:px-6 ${widthClass}`}>
-            <div className="mb-3 flex items-baseline justify-between gap-4">
-              <p className="font-heading text-2xl font-normal text-chestnut-900">
-                {completedCount === steps.length
-                  ? `All ${steps.length} steps done. Time for the kick test!`
-                  : `${completedCount} of ${steps.length} steps done`}
-              </p>
-              <p className="text-body font-medium text-chestnut-primary">
-                {Math.round(percent)}%
-              </p>
-            </div>
-            <Progress
-              value={percent}
-              className="h-4"
-              aria-label="Steps completed"
-            />
-          </div>
-        </div>
-      )}
       <main className={`mx-auto px-3 py-8 sm:px-6 ${widthClass}`}>
         <Link
           to="/projects"
@@ -144,6 +123,26 @@ export default function PatternInstructions() {
             <h1 className="font-heading text-h1 font-normal tracking-[-1.5px] text-chestnut-900">
               {pattern.pattern_name}
             </h1>
+
+            {showProgress && (
+              <div className="mt-6 rounded-lg border border-brand-border bg-white p-4 sm:p-5">
+                <div className="mb-3 flex items-baseline justify-between gap-4">
+                  <p className="font-heading text-2xl font-normal text-chestnut-900">
+                    {completedCount === steps.length
+                      ? `All ${steps.length} steps done. Time for the kick test!`
+                      : `${completedCount} of ${steps.length} steps done`}
+                  </p>
+                  <p className="text-body font-medium text-chestnut-primary">
+                    {Math.round(percent)}%
+                  </p>
+                </div>
+                <Progress
+                  value={percent}
+                  className="h-4"
+                  aria-label="Steps completed"
+                />
+              </div>
+            )}
 
             {(progressError || checklistError) && (
               <p role="alert" className="mt-4 text-body-sm text-chestnut-primary">
