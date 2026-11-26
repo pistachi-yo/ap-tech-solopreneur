@@ -25,7 +25,21 @@ export function PatternCard({
   onToggleBookmark,
 }: PatternCardProps) {
   return (
-    <Card className={cn(pattern.coming_soon && 'bg-brand-border/15')}>
+    <Card
+      className={cn(
+        pattern.coming_soon
+          ? 'bg-brand-border/15'
+          : [
+              // The whole card is the link target (see the stretched link
+              // below), so hover and pressed states are driven by that link.
+              'relative transition-[transform,box-shadow,border-color,background-color] duration-150 motion-reduce:transition-none',
+              'has-[a:hover]:border-chestnut-primary',
+              'has-[a:hover:not(:active)]:-translate-y-0.5 has-[a:hover:not(:active)]:shadow-[0_8px_18px_-8px_rgba(149,54,35,0.45)] motion-reduce:has-[a:hover:not(:active)]:translate-y-0',
+              'has-[a:active]:border-chestnut-primary has-[a:active]:bg-chestnut-tertiary',
+              'has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-chestnut-primary has-[a:focus-visible]:ring-offset-2',
+            ],
+      )}
+    >
       {pattern.image_url ? (
         <img
           src={pattern.image_url}
@@ -61,16 +75,21 @@ export function PatternCard({
             </p>
           ) : (
             <Button asChild>
-              <Link to={`/projects/${pattern.id}/instructions`}>
+              <Link
+                to={`/projects/${pattern.id}/instructions`}
+                className="after:absolute after:inset-0 after:content-['']"
+              >
                 Start making
               </Link>
             </Button>
           )}
-          <BookmarkButton
-            patternId={pattern.id}
-            bookmarked={bookmarked}
-            onToggle={onToggleBookmark}
-          />
+          <div className="relative z-10">
+            <BookmarkButton
+              patternId={pattern.id}
+              bookmarked={bookmarked}
+              onToggle={onToggleBookmark}
+            />
+          </div>
         </CardFooter>
       </div>
     </Card>
