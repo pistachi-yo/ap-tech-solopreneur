@@ -13,6 +13,7 @@ import { useExperiencedMode } from '@/hooks/useExperiencedMode'
 import { usePatternSteps } from '@/hooks/usePatternSteps'
 import { useStepProgress } from '@/hooks/useStepProgress'
 import { useAuth } from '@/lib/auth'
+import { getProgressMessage } from '@/lib/progressMessage'
 
 export default function PatternInstructions() {
   const { id } = useParams()
@@ -71,6 +72,7 @@ export default function PatternInstructions() {
       ] as const
     }),
   )
+  const progressMessage = getProgressMessage(percent)
   const ready = !loading && !error && !notFound
   const showProgress = ready && pattern !== null && !!user && steps.length > 0
 
@@ -156,6 +158,14 @@ export default function PatternInstructions() {
               className="h-4"
               aria-label="Steps completed"
             />
+            {progressMessage && (
+              <p
+                aria-live="polite"
+                className="mt-3 text-body-sm font-medium text-chestnut-primary"
+              >
+                {progressMessage}
+              </p>
+            )}
           </div>
         </div>
       )}
